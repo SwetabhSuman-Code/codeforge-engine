@@ -402,9 +402,3 @@ GitHub Actions workflow (`.github/workflows/ci.yml`) runs on every push and pull
 2. Installs Python dependencies from `requirements.txt`
 3. Runs **Alembic migrations** to validate schema integrity
 4. Runs the full **pytest** suite (13 tests)
-
----
-
-## License
-
-MIT License. See [LICENSE](LICENSE) for details.
