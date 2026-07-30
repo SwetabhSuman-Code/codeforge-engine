@@ -62,7 +62,7 @@ jobs:
 
       - name: Run Pytest suite
         env:
-          DATABASE_URL: postgresql://codeforge:codeforge@localhost:5432/codeforge
+          DATABASE_URL: sqlite:///./test_ci.db
           JWT_SECRET: ci-secret-key-12345
           JWT_ALGORITHM: HS256
           ACCESS_TOKEN_EXPIRE_MINUTES: 15

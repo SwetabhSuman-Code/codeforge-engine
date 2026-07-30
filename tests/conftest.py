@@ -15,7 +15,7 @@ from app.dependencies.auth import get_db
 from app.main import app
 import worker.worker
 
-TEST_DATABASE_URL = os.getenv("TEST_DATABASE_URL") or os.getenv("DATABASE_URL") or "sqlite:///./test_ci.db"
+TEST_DATABASE_URL = "sqlite:///./test_ci.db"
 connect_args = {"check_same_thread": False} if TEST_DATABASE_URL.startswith("sqlite") else {}
 engine = create_engine(TEST_DATABASE_URL, connect_args=connect_args)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
