@@ -70,4 +70,4 @@ jobs:
           REDIS_URL: redis://localhost:6379/0
           CORS_ORIGINS: http://localhost:3000
         run: |
-          pytest
+          pytest -v

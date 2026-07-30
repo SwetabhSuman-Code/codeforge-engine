@@ -1,6 +1,7 @@
 import os
 import shutil
 import subprocess
+import sys
 import tempfile
 from typing import Dict, Any
 
@@ -123,7 +124,7 @@ def _run_subprocess(
             file_path = os.path.join(temp_dir, "main.py")
             with open(file_path, "w", encoding="utf-8") as f:
                 f.write(code)
-            exec_args = ["python", file_path]
+            exec_args = [sys.executable, file_path]
             return _execute_cmd(exec_args, input_data, timeout_s)
 
         elif lang == "cpp":
@@ -177,7 +178,7 @@ def _run_subprocess(
             file_path = os.path.join(temp_dir, "main.py")
             with open(file_path, "w", encoding="utf-8") as f:
                 f.write(code)
-            return _execute_cmd(["python", file_path], input_data, timeout_s)
+            return _execute_cmd([sys.executable, file_path], input_data, timeout_s)
 
     except FileNotFoundError as e:
         return {
