@@ -28,8 +28,9 @@ def run_in_sandbox(
         "java": "openjdk:17-slim",
     }
 
-    # Attempt execution via Docker daemon if available
-    if docker:
+    # Attempt execution via Docker daemon if explicitly enabled and available
+    use_docker = os.getenv("USE_DOCKER_SANDBOX", "false").lower() in ["true", "1"]
+    if docker and use_docker:
         try:
             client = docker.from_env()
             client.ping()

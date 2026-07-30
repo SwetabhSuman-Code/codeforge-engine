@@ -87,6 +87,7 @@ services:
       REFRESH_TOKEN_EXPIRE_DAYS: ${REFRESH_TOKEN_EXPIRE_DAYS:-7}
       REDIS_URL: redis://redis:6379/0
       CORS_ORIGINS: ${CORS_ORIGINS:-*}
+      USE_DOCKER_SANDBOX: "true"
     depends_on:
       postgres:
         condition: service_healthy
