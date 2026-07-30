@@ -1,4 +1,8 @@
 import os
+
+# Set test DATABASE_URL environment variable BEFORE importing app models or db_config
+os.environ["DATABASE_URL"] = os.getenv("TEST_DATABASE_URL") or "sqlite:///./test_ci.db"
+
 import pytest
 from fastapi.testclient import TestClient
 
