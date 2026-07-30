@@ -15,8 +15,9 @@ from app.dependencies.auth import get_db
 from app.main import app
 import worker.worker
 
-TEST_DATABASE_URL = "sqlite:///./test_ci.db"
-engine = create_engine(TEST_DATABASE_URL, connect_args={"check_same_thread": False})
+TEST_DATABASE_URL = os.getenv("TEST_DATABASE_URL") or os.getenv("DATABASE_URL") or "sqlite:///./test_ci.db"
+connect_args = {"check_same_thread": False} if TEST_DATABASE_URL.startswith("sqlite") else {}
+engine = create_engine(TEST_DATABASE_URL, connect_args=connect_args)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 worker.worker.SessionLocal = TestingSessionLocal
@@ -32,7 +33,7 @@ def setup_test_database():
     yield
     Base.metadata.drop_all(bind=engine)
     engine.dispose()
-    if os.path.exists("./test_ci.db"):
+    if "sqlite" in TEST_DATABASE_URL and os.path.exists("./test_ci.db"):
         try:
             os.remove("./test_ci.db")
         except OSError:
