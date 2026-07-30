@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
 from app.api.auth_routes import router as auth_router
 from app.api.problem_routes import router as problem_router
 from app.api.submission_routes import router as submission_router
@@ -20,6 +21,7 @@ app = FastAPI(title="CodeForge Engine")
 # Wire rate limiting
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_middleware(SlowAPIMiddleware)
 
 # Configure CORS policy from settings.CORS_ORIGINS
 app.add_middleware(
