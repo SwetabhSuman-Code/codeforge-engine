@@ -20,6 +20,17 @@ from app.main import app
 limiter.enabled = False
 
 
+@pytest.fixture(autouse=True)
+def sync_queue_execution(monkeypatch):
+    from worker.worker import process_submission
+
+    def mock_enqueue(sub_id: int):
+        process_submission(sub_id)
+        return "test-sync"
+
+    monkeypatch.setattr("app.api.submission_routes.enqueue_submission", mock_enqueue)
+
+
 @pytest.fixture(scope="session", autouse=True)
 def setup_test_database():
     Base.metadata.drop_all(bind=engine)
