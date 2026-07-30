@@ -62,6 +62,7 @@ jobs:
 
       - name: Run Pytest suite
         env:
+          PYTHONPATH: .
           DATABASE_URL: sqlite:///./test_ci.db
           JWT_SECRET: ci-secret-key-12345
           JWT_ALGORITHM: HS256
@@ -70,4 +71,4 @@ jobs:
           REDIS_URL: redis://localhost:6379/0
           CORS_ORIGINS: http://localhost:3000
         run: |
-          pytest -v
+          python -m pytest -v
