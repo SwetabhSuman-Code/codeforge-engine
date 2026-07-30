@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.orm import Session
 from app.dependencies.auth import get_current_user, get_db
 from app.dependencies.rate_limiter import limiter
+from app.models.problem_model import Problem
 from app.models.submission_model import Submission
 from app.models.user_model import User
 from app.schemas.submission_schema import SubmissionCreate
@@ -26,6 +27,13 @@ def submit_code(
     enqueues task for execution, and returns 202 Accepted immediately.
     """
     logger.info("Submission received from user %d for problem %d", current_user.id, submission.problem_id)
+
+    problem = db.query(Problem).filter(Problem.id == submission.problem_id).first()
+    if not problem:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Problem not found",
+        )
 
     new_submission = Submission(
         problem_id=submission.problem_id,

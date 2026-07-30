@@ -5,3 +5,8 @@ __pycache__/
 *.db
 .env
 venv/
+.venv/
+.pytest_cache/
+.agents/
+.cursor/
+.claude/

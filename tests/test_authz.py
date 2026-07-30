@@ -1,3 +1,6 @@
+from app.models.problem_model import Problem
+
+
 def test_non_admin_cannot_create_problem(client):
     client.post(
         "/auth/register",
@@ -41,7 +44,12 @@ def test_admin_can_create_problem(client):
     assert data["created_by"] is not None
 
 
-def test_submission_owner_isolation(client):
+def test_submission_owner_isolation(client, db_session):
+    problem = Problem(title="Iso Problem", description="Desc")
+    db_session.add(problem)
+    db_session.commit()
+    db_session.refresh(problem)
+
     # Register Alice and Bob
     client.post(
         "/auth/register",
@@ -63,7 +71,7 @@ def test_submission_owner_isolation(client):
     # Alice submits code
     sub_res = client.post(
         "/submit",
-        json={"problem_id": 1, "language": "python", "code": "print('alice')"},
+        json={"problem_id": problem.id, "language": "python", "code": "print('alice')"},
         headers={"Authorization": f"Bearer {alice_token}"},
     )
     assert sub_res.status_code == 202
@@ -84,7 +92,12 @@ def test_submission_owner_isolation(client):
     assert bob_res.status_code == 403
 
 
-def test_admin_can_view_any_submission(client):
+def test_admin_can_view_any_submission(client, db_session):
+    problem = Problem(title="Admin Access Problem", description="Desc")
+    db_session.add(problem)
+    db_session.commit()
+    db_session.refresh(problem)
+
     # Register Charlie and Admin
     client.post(
         "/auth/register",
@@ -110,7 +123,7 @@ def test_admin_can_view_any_submission(client):
     # Charlie submits code
     sub_res = client.post(
         "/submit",
-        json={"problem_id": 1, "language": "python", "code": "print('charlie')"},
+        json={"problem_id": problem.id, "language": "python", "code": "print('charlie')"},
         headers={"Authorization": f"Bearer {charlie_token}"},
     )
     assert sub_res.status_code == 202
